@@ -4,7 +4,8 @@ table! {
         user_id -> Int4,
         testcase_id -> Int4,
         content -> Text,
-        hash_value -> Uuid,
+        hash1 -> Uuid,
+        hash2 -> Uuid,
     }
 }
 
