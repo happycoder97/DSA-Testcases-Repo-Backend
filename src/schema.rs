@@ -1,5 +1,5 @@
 table! {
-    submission (id) {
+    submissions (id) {
         id -> Int4,
         user_id -> Int4,
         testcase_id -> Int4,
@@ -10,7 +10,7 @@ table! {
 }
 
 table! {
-    testcase (id) {
+    testcases (id) {
         id -> Int4,
         user_id -> Int4,
         assg -> Bpchar,
@@ -20,7 +20,7 @@ table! {
 }
 
 table! {
-    useraccount (id) {
+    users (id) {
         id -> Int4,
         username -> Varchar,
         password -> Varchar,
@@ -28,7 +28,7 @@ table! {
 }
 
 allow_tables_to_appear_in_same_query!(
-    submission,
-    testcase,
-    useraccount,
+    submissions,
+    testcases,
+    users,
 );

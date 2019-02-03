@@ -1,5 +1,5 @@
 -- Your SQL goes here
-CREATE TABLE Testcase(
+CREATE TABLE testcases(
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL, 
     assg CHAR(5) NOT NULL,

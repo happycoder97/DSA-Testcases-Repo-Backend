@@ -1,5 +1,5 @@
 -- Your SQL goes here
-CREATE TABLE Submission(
+CREATE TABLE submissions(
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL, 
     testcase_id INTEGER NOT NULL,
