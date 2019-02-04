@@ -1,0 +1,2 @@
+[global.database]
+dsa_repo = {url = "postgres://dsa_repo:dsa_repo@localhost/dsa_repo"}
