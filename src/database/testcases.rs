@@ -49,7 +49,9 @@ impl<'a> ITestcaseDB for TestcaseDB<'a> {
         if model.user_id != user_id {
             return Err(DeleteTestcaseError::NotAuthorized);
         }
-        diesel::delete(dsl::testcases.find(testcase_id)).execute(self.connection);
+        diesel::delete(dsl::testcases.find(testcase_id))
+            .execute(self.connection)
+            .expect("Unable to delete testcase.");
         Ok(())
     }
 }
