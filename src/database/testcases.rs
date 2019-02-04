@@ -37,18 +37,19 @@ impl<'a> ITestcaseDB for TestcaseDB<'a> {
             .collect()
     }
     fn delete_testcase(&self, testcase_id: i32, user_id: i32) -> Result<(), DeleteTestcaseError> {
-        let model = dsl::testcases.find(testcase_id)
+        let model = dsl::testcases
+            .find(testcase_id)
             .get_result::<models::Testcase>(self.connection)
             .optional()
             .expect("Delete testcase: error querying.");
-        if(model.is_none()) {return Err(DeleteTestcaseError::NotFound);}
+        if model.is_none() {
+            return Err(DeleteTestcaseError::NotFound);
+        }
         let model = model.unwrap();
-        if(model.user_id != user_id) {return Err(DeleteTestcaseError::NotAuthorized);}
-        diesel::delete(
-            dsl::testcases
-                .find(testcase_id)
-        )
-        .execute(self.connection);
+        if model.user_id != user_id {
+            return Err(DeleteTestcaseError::NotAuthorized);
+        }
+        diesel::delete(dsl::testcases.find(testcase_id)).execute(self.connection);
         Ok(())
     }
 }

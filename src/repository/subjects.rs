@@ -1,6 +1,6 @@
 pub struct Subject {
     pub id: i32,
-    pub title: String
+    pub title: String,
 }
 
 pub trait ISubjectDB {

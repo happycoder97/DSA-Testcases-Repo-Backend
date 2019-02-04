@@ -1,8 +1,7 @@
 use super::models;
 use super::schema::users;
-use diesel::prelude::*;
 use crate::repository::users::*;
-
+use diesel::prelude::*;
 
 pub struct UserDB<'conn> {
     connection: &'conn PgConnection,
