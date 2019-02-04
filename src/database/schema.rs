@@ -1,4 +1,11 @@
 table! {
+    subjects (id) {
+        id -> Int4,
+        title -> Varchar,
+    }
+}
+
+table! {
     submissions (id) {
         id -> Int4,
         user_id -> Int4,
@@ -13,6 +20,7 @@ table! {
     testcases (id) {
         id -> Int4,
         user_id -> Int4,
+        subject_id -> Int4,
         assg -> Bpchar,
         ques -> Bpchar,
         content -> Text,
@@ -24,10 +32,12 @@ table! {
         id -> Int4,
         username -> Varchar,
         password -> Varchar,
+        is_admin -> Bool,
     }
 }
 
 allow_tables_to_appear_in_same_query!(
+    subjects,
     submissions,
     testcases,
     users,
