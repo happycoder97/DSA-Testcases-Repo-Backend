@@ -1,19 +1,23 @@
 use super::models;
 use super::schema::submissions::dsl;
 use crate::repository::submissions::*;
+use diesel::pg::Pg;
 use diesel::prelude::*;
 use md5;
 use uuid::Uuid;
 
-pub struct SubmissionDB<'a> {
-    connection: &'a PgConnection,
+pub struct SubmissionDB<C: Connection<Backend = Pg>> {
+    pub connection: C,
 }
 
-impl<'a> ISubmissionDB for SubmissionDB<'a> {
+impl<C> ISubmissionDB for SubmissionDB<C>
+where
+    C: Connection<Backend = Pg>,
+{
     fn get_all(&self, testcase_id: i32) -> Vec<SavedSubmission> {
         dsl::submissions
             .filter(dsl::testcase_id.eq(testcase_id))
-            .load::<models::Submission>(self.connection)
+            .load::<models::Submission>(&self.connection)
             .expect("Unable to get_all submissions.")
             .into_iter()
             .map(|model| SavedSubmission {
@@ -52,14 +56,14 @@ impl<'a> ISubmissionDB for SubmissionDB<'a> {
                 hash1,
                 hash2,
             })
-            .execute(self.connection)
+            .execute(&self.connection)
             .expect("Unable to insert submission.");
     }
 
     fn delete(&self, submission_id: i32, user_id: i32) -> Result<(), DeleteSubmissionError> {
         let model = dsl::submissions
             .find(submission_id)
-            .get_result::<models::Submission>(self.connection)
+            .get_result::<models::Submission>(&self.connection)
             .optional()
             .expect("Delete submission: error querying.");
         if model.is_none() {
@@ -70,7 +74,7 @@ impl<'a> ISubmissionDB for SubmissionDB<'a> {
             return Err(DeleteSubmissionError::NotAuthorized);
         }
         diesel::delete(dsl::submissions.find(submission_id))
-            .execute(self.connection)
+            .execute(&self.connection)
             .expect("Unable to delete submission.");
         Ok(())
     }

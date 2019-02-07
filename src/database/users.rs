@@ -1,19 +1,23 @@
 use super::models;
 use super::schema::users;
 use crate::repository::users::*;
+use diesel::pg::Pg;
 use diesel::prelude::*;
 
-pub struct UserDB<'conn> {
-    connection: &'conn PgConnection,
+pub struct UserDB<C: Connection<Backend = Pg>> {
+    pub connection: C,
 }
 
-impl<'conn> IUserDB for UserDB<'conn> {
+impl<C> IUserDB for UserDB<C>
+where
+    C: Connection<Backend = Pg>,
+{
     fn authenticate(&self, username: String, password: String) -> Result<User, ()> {
         let results = users::table
             .filter(users::username.eq(&username))
             .filter(users::password.eq(&password))
             .limit(1)
-            .load::<models::User>(self.connection)
+            .load::<models::User>(&self.connection)
             .unwrap();
 
         match results.len() {
@@ -40,7 +44,7 @@ impl<'conn> IUserDB for UserDB<'conn> {
 
         let _user_model: models::User = diesel::insert_into(users::table)
             .values(&user_model)
-            .get_result(self.connection)
+            .get_result(&self.connection)
             .expect("Error inserting user.");
     }
 }
