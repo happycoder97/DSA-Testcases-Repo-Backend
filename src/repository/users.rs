@@ -5,6 +5,6 @@ pub struct User {
 }
 
 pub trait IUserDB {
-    fn authenticate(&self, username: String, password: String) -> Result<User, ()>;
+    fn authenticate(&self, username: &str, password: &str) -> Result<User, ()>;
     fn signup(&self, username: String, password: String);
 }

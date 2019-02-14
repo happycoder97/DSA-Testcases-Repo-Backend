@@ -12,10 +12,10 @@ impl<C> IUserDB for UserDB<C>
 where
     C: Connection<Backend = Pg>,
 {
-    fn authenticate(&self, username: String, password: String) -> Result<User, ()> {
+    fn authenticate(&self, username: &str, password: &str) -> Result<User, ()> {
         let results = users::table
-            .filter(users::username.eq(&username))
-            .filter(users::password.eq(&password))
+            .filter(users::username.eq(username))
+            .filter(users::password.eq(password))
             .limit(1)
             .load::<models::User>(&self.connection)
             .unwrap();
