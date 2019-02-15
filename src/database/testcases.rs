@@ -12,15 +12,23 @@ impl<C> ITestcaseDB for TestcaseDB<C>
 where
     C: Connection<Backend = Pg>,
 {
-    fn get_all_testcases(&self, testcase_group: &TestcaseGroup) -> Vec<String> {
+    fn get_all_testcases(&self, testcase_group: &TestcaseGroup) -> Vec<Testcase> {
         dsl::testcases
             .filter(dsl::subject_id.eq(testcase_group.subject_id))
-            .filter(dsl::assg.eq(&testcase_group.assignment))
-            .filter(dsl::ques.eq(&testcase_group.question))
+            .filter(dsl::assg.eq(&testcase_group.assignment_id))
+            .filter(dsl::ques.eq(&testcase_group.question_id))
             .load::<models::Testcase>(&self.connection)
             .expect("Unable to load testcases.")
             .into_iter()
-            .map(|model| model.content)
+            .map(|model| Testcase {
+                id: model.id,
+                group: TestcaseGroup {
+                    subject_id: model.subject_id,
+                    assignment_id: model.assg,
+                    question_id: model.ques,
+                },
+                content: model.content,
+            })
             .collect()
     }
 
@@ -34,8 +42,8 @@ where
                 id: model.id,
                 group: TestcaseGroup {
                     subject_id: model.subject_id,
-                    assignment: model.assg,
-                    question: model.ques,
+                    assignment_id: model.assg,
+                    question_id: model.ques,
                 },
                 content: model.content,
             })
@@ -59,5 +67,19 @@ where
             .execute(&self.connection)
             .expect("Unable to delete testcase.");
         Ok(())
+    }
+
+    fn save_testcase(&self, user_id: i32, testcase: NewTestcase) {
+        let new_testcase = models::NewTestcase {
+            user_id,
+            subject_id: testcase.group.subject_id,
+            assg: testcase.group.assignment_id,
+            ques: testcase.group.question_id,
+            content: testcase.content,
+        };
+        diesel::insert_into(dsl::testcases)
+            .values(&new_testcase)
+            .execute(&self.connection)
+            .expect("Unable to insert testcase.");
     }
 }
