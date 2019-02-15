@@ -21,8 +21,8 @@ table! {
         id -> Int4,
         user_id -> Int4,
         subject_id -> Int4,
-        assg -> Bpchar,
-        ques -> Bpchar,
+        assignment_char -> Bpchar,
+        question_num -> Int4,
         content -> Text,
     }
 }
@@ -36,4 +36,9 @@ table! {
     }
 }
 
-allow_tables_to_appear_in_same_query!(subjects, submissions, testcases, users,);
+allow_tables_to_appear_in_same_query!(
+    subjects,
+    submissions,
+    testcases,
+    users,
+);
