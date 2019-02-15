@@ -71,7 +71,7 @@ fn extract_username_password_from_b64(header_value: &str) -> Option<(String, Str
         .and_then(|decoded_vec| String::from_utf8(decoded_vec).ok());
 
     auth_str.and_then(|auth| {
-        let mut split_by_colon = auth.split(":");
+        let mut split_by_colon = auth.split(':');
         let username = split_by_colon.next().map(String::from);
         let password = split_by_colon.next().map(String::from);
         if let (Some(username), Some(password)) = (username, password) {
