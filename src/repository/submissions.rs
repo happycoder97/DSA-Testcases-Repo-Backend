@@ -22,5 +22,5 @@ pub struct Submission {
 pub trait ISubmissionDB {
     fn get_by_testcase(&self, testcase_id: i32) -> (Vec<Submission>, Vec<User>);
     fn insert(&self, submission: &NewSubmission);
-    fn try_delete(&self, submission_id: i32, user_id: i32) -> Result<(), RecordError>;
+    fn delete(&self, submission_id: i32) -> Result<(), RecordError>;
 }

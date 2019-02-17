@@ -10,24 +10,24 @@ pub struct TestcaseGroup {
 pub struct Testcase {
     pub id: i32,
     pub user_id: i32,
-    pub group: TestcaseGroup,
+    pub subject_id: i32,
+    pub assignment_char: String,
+    pub question_num: i32,
     pub content: String,
 }
 
 pub struct NewTestcase {
-    pub group: TestcaseGroup,
+    pub user_id: i32,
+    pub subject_id: i32,
+    pub assignment_char: String,
+    pub question_num: i32,
     pub content: String,
 }
 
 pub trait ITestcaseDB {
     fn get_by_group(&self, testcase_group: &TestcaseGroup) -> (Vec<Testcase>, Vec<User>);
     fn get_by_user(&self, user_id: i32) -> Vec<Testcase>;
-    fn insert(&self, user_id: i32, testcase: NewTestcase);
-    fn try_delete(&self, testcase_id: i32, user_id: i32) -> Result<(), RecordError>;
-    fn try_update(
-        &self,
-        testcase_id: i32,
-        user_id: i32,
-        testcase: &NewTestcase,
-    ) -> Result<(), RecordError>;
+    fn insert(&self, testcase: NewTestcase);
+    fn delete(&self, id: i32) -> Result<(), RecordError>;
+    fn update(&self, testcase: &Testcase) -> Result<(), RecordError>;
 }
