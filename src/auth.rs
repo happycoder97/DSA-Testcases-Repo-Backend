@@ -1,4 +1,4 @@
-use crate::repository::users::IUserDB;
+use crate::repository::IUserDB;
 use base64;
 use rocket::http::Status;
 use rocket::request::{self, FromRequest, Request};
