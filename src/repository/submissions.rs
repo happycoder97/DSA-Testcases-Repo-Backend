@@ -8,7 +8,7 @@ pub struct NewSubmission {
     pub content: String,
 }
 
-pub struct SavedSubmission {
+pub struct Submission {
     pub id: i32,
     pub user_id: i32,
     pub testcase_id: i32,
@@ -18,7 +18,7 @@ pub struct SavedSubmission {
 }
 
 pub trait ISubmissionDB {
-    fn get_by_testcase(&self, testcase_id: i32) -> (Vec<SavedSubmission>, Vec<User>);
+    fn get_by_testcase(&self, testcase_id: i32) -> (Vec<Submission>, Vec<User>);
     fn insert(&self, submission: &NewSubmission);
     fn try_delete(&self, submission_id: i32, user_id: i32) -> Result<(), RecordError>;
 }
