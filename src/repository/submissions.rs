@@ -6,6 +6,8 @@ pub struct NewSubmission {
     pub user_id: i32,
     pub testcase_id: i32,
     pub content: String,
+    pub hash1: Uuid,
+    pub hash2: Uuid,
 }
 
 pub struct Submission {
