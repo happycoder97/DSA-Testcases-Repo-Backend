@@ -3,9 +3,13 @@ pub struct Subject {
     pub title: String,
 }
 
+pub struct NewSubject {
+    pub title: String,
+}
+
 pub trait ISubjectDB {
-    fn add_subject(&self, title: String);
-    fn delete_subject(&self, id: i32);
-    fn update_subject(&self, id: i32, title: String);
+    fn insert(&self, new_subject: NewSubject);
+    fn update(&self, subject: &Subject);
+    fn delete(&self, id: i32);
     fn get_all(&self) -> Vec<Subject>;
 }

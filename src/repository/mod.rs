@@ -1,4 +1,14 @@
-pub mod subjects;
-pub mod submissions;
-pub mod testcases;
-pub mod users;
+mod subjects;
+mod submissions;
+mod testcases;
+mod users;
+
+pub use subjects::*;
+pub use submissions::*;
+pub use testcases::*;
+pub use users::*;
+
+pub enum RecordError {
+    NotFound,
+    NotAuthorized,
+}
