@@ -1,11 +1,11 @@
 pub struct User {
-    pub user_id: i32,
+    pub id: i32,
     pub username: String,
+    pub password: String,
     pub is_admin: bool,
 }
 
 pub struct NewUser {
-    pub user_id: i32,
     pub username: String,
     pub password: String,
     pub is_admin: bool,

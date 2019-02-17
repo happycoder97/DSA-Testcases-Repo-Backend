@@ -7,8 +7,3 @@ pub use subjects::*;
 pub use submissions::*;
 pub use testcases::*;
 pub use users::*;
-
-pub enum RecordError {
-    NotFound,
-    NotAuthorized,
-}

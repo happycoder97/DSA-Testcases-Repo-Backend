@@ -28,6 +28,6 @@ pub trait ITestcaseDB {
     fn get_by_group(&self, testcase_group: &TestcaseGroup) -> (Vec<Testcase>, Vec<User>);
     fn get_by_user(&self, user_id: i32) -> Vec<Testcase>;
     fn insert(&self, testcase: NewTestcase);
-    fn delete(&self, id: i32) -> Result<(), RecordError>;
-    fn update(&self, testcase: &Testcase) -> Result<(), RecordError>;
+    fn delete(&self, id: i32);
+    fn update(&self, testcase: &Testcase);
 }
