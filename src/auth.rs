@@ -27,7 +27,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserGuard {
 
         let user = request
             .headers()
-            .get_one("Authentication")
+            .get_one("Authorization")
             .and_then(extract_username_password_from_b64)
             .and_then(|(username, password)| user_db.authenticate(&username, &password).ok());
 
@@ -47,7 +47,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for AdminGuard {
 
         let user = request
             .headers()
-            .get_one("Authentication")
+            .get_one("Authorization")
             .and_then(extract_username_password_from_b64)
             .and_then(|(username, password)| user_db.authenticate(&username, &password).ok())
             .filter(|user| user.is_admin);
@@ -61,10 +61,12 @@ impl<'a, 'r> FromRequest<'a, 'r> for AdminGuard {
 
 fn extract_username_password_from_b64(header_value: &str) -> Option<(String, String)> {
     let b64_auth = if header_value.starts_with("Basic ") {
+        dbg!(&header_value);
         Some(header_value["Basic ".len()..].trim())
     } else {
         None
     };
+    dbg!(&b64_auth);
     let auth_str = b64_auth
         .as_ref()
         .and_then(|b64_auth| base64::decode(b64_auth).ok())
@@ -74,6 +76,7 @@ fn extract_username_password_from_b64(header_value: &str) -> Option<(String, Str
         let mut split_by_colon = auth.split(':');
         let username = split_by_colon.next().map(String::from);
         let password = split_by_colon.next().map(String::from);
+        dbg!((&username, &password));
         if let (Some(username), Some(password)) = (username, password) {
             Some((username, password))
         } else {
