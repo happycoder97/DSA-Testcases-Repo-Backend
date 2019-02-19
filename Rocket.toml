@@ -1,2 +1,6 @@
-[global.database]
+[global.databases]
 dsa_repo = {url = "postgres://dsa_repo:dsa_repo@localhost/dsa_repo"}
+
+[development]
+address = "127.0.0.1"
+port = 8000
