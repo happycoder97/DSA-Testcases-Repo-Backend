@@ -16,6 +16,6 @@ diesel = { version = "1.4", features = ["postgres", "uuid"]}
 
 dotenv = "0.13"
 
-uuid = "0.6"
+uuid = { version = "0.6", features = ["serde"]}
 md5 = "0.6.1"
 base64 = "0.9.3"
