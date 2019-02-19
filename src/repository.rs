@@ -43,6 +43,7 @@ pub trait CRUD<Model, NewModel> {
 pub trait IUserDB {
     fn authenticate(&self, username: &str, password: &str) -> Result<User, ()>;
     fn signup(&self, new_user: &NewUser);
+    fn change_password(&self, user_id: i32, password: &str);
 }
 
 pub trait ISubjectDB: CRUD<Subject, NewSubject> {}
@@ -55,9 +56,10 @@ pub struct TestcaseGroup {
 
 pub trait ITestcaseDB: CRUD<Testcase, NewTestcase> {
     fn get_by_group(&self, testcase_group: &TestcaseGroup) -> (Vec<Testcase>, Vec<User>);
-    fn get_by_user(&self, user_id: i32) -> Vec<Testcase>;
+    fn get_by_user(&self, username: &str) -> Vec<Testcase>;
 }
 
 pub trait ISubmissionDB: CRUD<Submission, NewSubmission> {
+    fn create_or_update(&self, submission: &NewSubmission);
     fn get_by_testcase(&self, testcase_id: i32) -> (Vec<Submission>, Vec<User>);
 }

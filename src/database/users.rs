@@ -9,7 +9,7 @@ where
     C: Connection<Backend = Pg>,
 {
     fn authenticate(&self, username: &str, password: &str) -> Result<User, ()> {
-        let results = users::table
+        let mut results = users::table
             .filter(users::username.eq(username))
             .filter(users::password.eq(password))
             .limit(1)
@@ -22,7 +22,7 @@ where
             _ => panic!("More than one user with same username: {}", username),
         }
 
-        let user_model = results[0];
+        let user_model = results.pop().unwrap();
         Ok(user_model)
     }
 
@@ -31,5 +31,12 @@ where
             .values(new_user)
             .execute(&self.connection)
             .expect("Error inserting user.");
+    }
+
+    fn change_password(&self, user_id: i32, password: &str) {
+        diesel::update(users::table.find(user_id))
+            .set(users::password.eq(password))
+            .execute(&self.connection)
+            .expect("Error updating password");
     }
 }

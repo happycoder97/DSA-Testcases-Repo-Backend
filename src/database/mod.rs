@@ -59,10 +59,18 @@ where
             .collect();
         (testcases, users)
     }
-    fn get_by_user(&self, user_id: i32) -> Vec<Testcase> {
+
+    fn get_by_user(&self, username: &str) -> Vec<Testcase> {
         use schema::testcases::dsl;
+        use schema::users::dsl as users_dsl;
         dsl::testcases
-            .filter(dsl::user_id.eq(user_id))
+            .filter(
+                dsl::user_id.eq_any(
+                    users_dsl::users
+                        .filter(users_dsl::username.eq(username))
+                        .select(users_dsl::id),
+                ),
+            )
             .load::<Testcase>(&self.connection)
             .expect("Unable to load testcases.")
             .into_iter()
@@ -105,5 +113,26 @@ where
             .collect();
 
         (submissions, users)
+    }
+
+    fn create_or_update(&self, submission: &NewSubmission) {
+        use schema::submissions::dsl;
+        let mut submissions: Vec<Submission> = dsl::submissions
+            .filter(dsl::testcase_id.eq(submission.testcase_id))
+            .filter(dsl::user_id.eq(submission.user_id))
+            .load::<Submission>(&self.connection)
+            .expect("Unable to get for create_or_update submissions.")
+            .into_iter()
+            .collect();
+
+        if let Some(old_submission) = submissions.pop() {
+            let mut new_submission = old_submission;
+            new_submission.content = submission.content.clone();
+            new_submission.hash1 = submission.hash1;
+            new_submission.hash2 = submission.hash2;
+            self.update(&new_submission);
+        } else {
+            self.create(submission);
+        }
     }
 }

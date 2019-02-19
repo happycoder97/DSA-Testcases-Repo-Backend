@@ -4,16 +4,16 @@ macro_rules! model_struct {
                 $(pub $field:ident: $type:ty),+
             }
         )+) => {
+            use crate::database::schema::*;
             $(
-                use crate::database::schema::*;
-                #[derive(Queryable, AsChangeset)]
+                #[derive(Serialize, Deserialize, Queryable, AsChangeset)]
                 #[table_name=$table]
                 pub struct $struct {
                     pub id: i32,
                     $(pub $field: $type),+
                 }
 
-                #[derive(Insertable)]
+                #[derive(Deserialize, Insertable)]
                 #[table_name=$table]
                 pub struct $new_struct {
                     $(pub $field: $type),+
